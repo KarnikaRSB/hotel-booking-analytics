@@ -31,7 +31,7 @@ df["lead_time_category"] = pd.cut(
     labels=labels
 )
 
-# Calculate cancellation rate by lead-time category
+## Calculate cancellation rate by lead-time category
 lead_time_analysis = df.groupby(
     "lead_time_category", observed=True
 )["is_canceled"].agg(
@@ -43,4 +43,29 @@ lead_time_analysis["cancellation_rate"] *= 100
 
 print("\nCancellation rate by lead time:")
 print(lead_time_analysis.round(2))
+
+
+# Cancellation rate by deposit type
+deposit_analysis = df.groupby("deposit_type")["is_canceled"].agg(
+    booking_count="count",
+    cancellation_rate="mean"
+)
+
+deposit_analysis["cancellation_rate"] *= 100
+
+print("\nCancellation rate by deposit type:")
+print(deposit_analysis.round(2))
+
+
+## Cancellation rate by customer type
+customer_analysis = df.groupby("customer_type")["is_canceled"].agg(
+    booking_count="count",
+    cancellation_rate="mean"
+)
+
+customer_analysis["cancellation_rate"] *= 100
+
+print("\nCancellation rate by customer type:")
+print(customer_analysis.round(2))
+
 
