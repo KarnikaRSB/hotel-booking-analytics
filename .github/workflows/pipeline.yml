@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Get the code
         uses: actions/checkout@v4
+        with:
+          ref: main        # always start from the latest main, also when a run is re-run
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -65,6 +67,6 @@ jobs:
             echo "Nothing changed."
           else
             git commit -m "Automated pipeline update [skip ci]"
-            git pull --rebase
+            git pull --rebase -X theirs   # if main moved meanwhile, keep this run's fresh outputs
             git push
           fi
