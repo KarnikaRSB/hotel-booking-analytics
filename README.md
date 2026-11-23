@@ -1,4 +1,4 @@
-# hotel-booking-analytics
+# Hotel-booking-analytics
 Hotel booking analytics: data examination and cleaning, business indicators, interactive Dash dashboard, GitHub Actions automation and batch data processing.
 
 ## Kaggle data set link:
