@@ -69,7 +69,9 @@ print("\nCancellation rate by customer type:")
 print(customer_analysis.round(2))
 
 
-## Q2: Calculate total nights for each booking
+# Question 2: Booking demand, ADR and estimated booking value
+
+# Calculate total nights booked
 df["total_nights"] = (
     df["stays_in_weekend_nights"] +
     df["stays_in_week_nights"]
@@ -80,7 +82,90 @@ df["estimated_booking_value"] = (
     df["adr"] * df["total_nights"]
 )
 
+# Display a sample
 print("\nSample of Q2 indicators:")
 print(df[["hotel", "adr", "total_nights",
           "estimated_booking_value"]].head())
 
+
+# Question 2: Analysis by hotel type
+
+hotel_analysis = df.groupby("hotel").agg(
+    booking_count=("hotel", "size"),
+    average_adr=("adr", "mean"),
+    average_nights=("total_nights", "mean"),
+    average_booking_value=("estimated_booking_value", "mean")
+)
+
+print("\nBooking analysis by hotel type:")
+print(hotel_analysis.round(2).to_string(index=True))
+
+
+# Question 2: Booking analysis by market segment
+
+segment_booking_analysis = df.groupby("market_segment").agg(
+    booking_count=("hotel", "size"),
+    average_adr=("adr", "mean"),
+    average_nights=("total_nights", "mean"),
+    average_booking_value=("estimated_booking_value", "mean")
+)
+
+print("\nBooking analysis by market segment:")
+print(segment_booking_analysis.round(2).T.to_string())
+
+
+# Question 2: Booking analysis by year and month
+
+monthly_analysis = df.groupby(
+    ["arrival_date_year", "arrival_date_month"]
+).agg(
+    booking_count=("hotel", "size"),
+    average_adr=("adr", "mean"),
+    average_nights=("total_nights", "mean"),
+    average_booking_value=("estimated_booking_value", "mean")
+)
+
+print("\nBooking analysis by year and month:")
+print(monthly_analysis.round(2).to_string())
+
+
+# Arrange months in chronological order
+month_order = [
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+]
+
+monthly_analysis = monthly_analysis.reset_index()
+
+monthly_analysis["arrival_date_month"] = pd.Categorical(
+    monthly_analysis["arrival_date_month"],
+    categories=month_order,
+    ordered=True
+)
+
+monthly_analysis = monthly_analysis.sort_values(
+    ["arrival_date_year", "arrival_date_month"]
+)
+
+print("\nMonthly analysis in chronological order:")
+print(monthly_analysis.round(2).to_string(index=False))
+
+
+# Save calculated indicators for the dashboard
+
+from pathlib import Path
+
+output_folder = Path("Data/indicators")
+output_folder.mkdir(parents=True, exist_ok=True)
+
+segment_analysis.to_csv(output_folder / "cancellation_by_segment.csv")
+lead_time_analysis.to_csv(output_folder / "cancellation_by_lead_time.csv")
+deposit_analysis.to_csv(output_folder / "cancellation_by_deposit.csv")
+customer_analysis.to_csv(output_folder / "cancellation_by_customer.csv")
+
+hotel_analysis.to_csv(output_folder / "booking_by_hotel.csv")
+segment_booking_analysis.to_csv(output_folder / "booking_by_segment.csv")
+monthly_analysis.to_csv(output_folder / "booking_by_month.csv", index=False)
+
+print("\nAll indicator files saved successfully!")
