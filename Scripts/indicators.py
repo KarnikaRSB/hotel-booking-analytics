@@ -69,3 +69,18 @@ print("\nCancellation rate by customer type:")
 print(customer_analysis.round(2))
 
 
+## Q2: Calculate total nights for each booking
+df["total_nights"] = (
+    df["stays_in_weekend_nights"] +
+    df["stays_in_week_nights"]
+)
+
+# Calculate estimated booking value
+df["estimated_booking_value"] = (
+    df["adr"] * df["total_nights"]
+)
+
+print("\nSample of Q2 indicators:")
+print(df[["hotel", "adr", "total_nights",
+          "estimated_booking_value"]].head())
+
