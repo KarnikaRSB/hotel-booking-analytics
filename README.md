@@ -1,13 +1,18 @@
 # hotel-booking-analytics
-Hotel booking analytics: data cleaning, indicators, Dash dashboard, GitHub Actions automation and ML cancellation prediction.
+Hotel booking analytics: data examination and cleaning, business indicators, interactive Dash dashboard, GitHub Actions automation and batch data processing.
 
 ## Kaggle data set link:
     https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand
 
 ## Questions to solve:
-Q1: Which bookings are likely to be cancelled, and what drives it? Indicators: cancellation rate by segment, lead-time bucket, deposit type, customer type, plus an ML cancellation probability.
 
-Q2: When and where does the hotel earn the most, and how can it optimise pricing? Indicators: ADR, revenue per booking, revenue per month, occupancy proxy (nights booked), by hotel and market segment.
+**Q1: Which booking characteristics are associated with higher cancellation rates, and how do these patterns differ across reservation segments?**
+
+Indicators: Cancellation rate by market segment, lead-time category, deposit type and customer type; booking counts per segment; and relative cancellation risk compared with the overall cancellation rate.
+
+**Q2: How do booking demand, average daily rates and estimated booking value vary across time, hotel types and market segments?**
+
+Indicators: Booking volume, average daily rate (ADR), average length of stay, estimated booking value (ADR × total nights), estimated non-cancelled booking value and total booked nights, compared by month, hotel type and market segment.
 
 ## Data examination and cleaning
 
