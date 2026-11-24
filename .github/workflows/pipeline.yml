@@ -1,30 +1,6 @@
 name: Data pipeline
 
 on:
-  # 1. A new batch file is pushed, or a script changes
-  push:
-    branches: [main]
-    paths:
-      - "Data/batches/incoming/**"
-      - "Scripts/**"
-      - "requirements.txt"
-  # 2. Every Monday at 06:00 UTC (simulates the weekly arrival of new bookings)
-  schedule:
-    - cron: "0 6 * * 1"
-  # 3. Manual "Run workflow" button in the Actions tab
-  workflow_dispatch:
-
-permissions:
-  contents: write          # needed to commit the updated data back to the repo
-
-concurrency:
-  group: data-pipeline     # never run two pipelines at the same time
-  cancel-in-progress: false
-
-jobs:
-  pipeline:name: Data pipeline
-
-on:
   push:
     branches: [main]
     paths:
@@ -92,52 +68,5 @@ jobs:
           else
             git commit -m "Automated pipeline update [skip ci]"
             git pull --rebase -X theirs
-            git push
-          fi
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get the code
-        uses: actions/checkout@v4
-        with:
-          ref: main        # always start from the latest main, also when a run is re-run
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-
-      - name: Install packages
-        run: pip install -r requirements.txt
-
-      - name: Create a batch (temporary, until we receive the course BatchSimulator)
-        if: github.event_name == 'schedule'
-        run: python Scripts/simulate_batch.py 500
-
-      - name: Process new batches
-        run: python Scripts/process_batch.py
-
-      - name: Retrain model and score bookings
-        run: python Scripts/ml_model.py
-
-      - name: Build report
-        run: python Scripts/generate_report.py
-
-      - name: Upload report (downloadable from the run page)
-        uses: actions/upload-artifact@v4
-        with:
-          name: hotel-booking-report
-          path: reports/
-
-      - name: Commit updated data back to the repo
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Data/clean Data/batches models reports
-          if git diff --cached --quiet; then
-            echo "Nothing changed."
-          else
-            git commit -m "Automated pipeline update [skip ci]"
-            git pull --rebase -X theirs   # if main moved meanwhile, keep this run's fresh outputs
             git push
           fi
