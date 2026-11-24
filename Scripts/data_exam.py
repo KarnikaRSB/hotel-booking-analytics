@@ -1,8 +1,8 @@
 import pandas as pd
 from pathlib import Path
 
-RAW = Path("data/raw/hotel_bookings.csv")
-CLEAN = Path("data/clean/hotel_bookings_clean.csv")
+RAW = Path("Data/raw/hotel_bookings.csv")
+CLEAN = Path("Data/clean/hotel_bookings_clean.csv")
 
 CATEGORICAL_COLS = ["hotel", "meal", "country", "market_segment", "distribution_channel",
                     "reserved_room_type", "assigned_room_type", "deposit_type",
