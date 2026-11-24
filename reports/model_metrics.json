@@ -2,33 +2,33 @@
   "best_model": "Gradient Boosting",
   "comparison": {
     "Logistic Regression": {
-      "roc_auc": 0.793,
-      "accuracy": 0.782,
-      "precision": 0.694,
-      "recall": 0.383,
-      "f1": 0.493
+      "roc_auc": 0.794,
+      "accuracy": 0.784,
+      "precision": 0.7,
+      "recall": 0.386,
+      "f1": 0.498
     },
     "Gradient Boosting": {
       "roc_auc": 0.841,
-      "accuracy": 0.807,
-      "precision": 0.713,
-      "recall": 0.505,
-      "f1": 0.592
+      "accuracy": 0.806,
+      "precision": 0.707,
+      "recall": 0.514,
+      "f1": 0.595
     }
   },
   "feature_importance": {
-    "lead_time": 0.0979,
-    "required_car_parking_spaces": 0.0737,
-    "market_segment": 0.065,
-    "total_of_special_requests": 0.052,
-    "customer_type": 0.045,
-    "adr": 0.0364,
-    "previous_bookings_not_canceled": 0.02,
-    "previous_cancellations": 0.0187,
-    "hotel": 0.0164,
-    "deposit_type": 0.0158
+    "lead_time": 0.1017,
+    "required_car_parking_spaces": 0.0829,
+    "total_of_special_requests": 0.0601,
+    "market_segment": 0.054,
+    "adr": 0.0435,
+    "customer_type": 0.0391,
+    "previous_cancellations": 0.0196,
+    "previous_bookings_not_canceled": 0.0158,
+    "hotel": 0.0131,
+    "deposit_type": 0.012
   },
-  "train_rows": 69216,
-  "test_rows": 17304,
+  "train_rows": 69614,
+  "test_rows": 17404,
   "cancellation_rate": 0.277
 }
