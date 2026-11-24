@@ -22,7 +22,78 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  pipeline:name: Data pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Data/batches/incoming/**"
+      - "Scripts/**"
+      - "requirements.txt"
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-pipeline
+  cancel-in-progress: false
+
+jobs:
   pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Create a batch (temporary, until we receive the course BatchSimulator)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'   # CHANGED
+        run: python Scripts/simulate_batch.py 500
+
+      - name: Process new batches
+        run: python Scripts/process_batch.py
+
+      - name: Update indicators                                                          # NEW
+        run: python Scripts/indicators.py                                                # NEW
+
+      - name: Retrain model and score bookings
+        run: python Scripts/ml_model.py
+
+      - name: Build report
+        run: python Scripts/generate_report.py
+
+      - name: Upload report (downloadable from the run page)
+        uses: actions/upload-artifact@v4
+        with:
+          name: hotel-booking-report
+          path: reports/
+
+      - name: Commit updated data back to the repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Data/clean Data/batches Data/indicators models reports                 # CHANGED
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+          else
+            git commit -m "Automated pipeline update [skip ci]"
+            git pull --rebase -X theirs
+            git push
+          fi
     runs-on: ubuntu-latest
     steps:
       - name: Get the code
