@@ -238,15 +238,6 @@ Design choices:
 - Each task is developed on its own branch (for example `feature/data-exam`) and merged through a Pull Request.
 - Commit messages describe what changed and why.
 
-## Known limitations
-
-- The indicator tables used by the dashboard are created by `Scripts/indicators.py`. The automated pipeline updates the clean dataset, the model, the scores and the report, so after new batches run `python Scripts/indicators.py` to refresh the dashboard indicators.
-- The dashboard shows the cancellation and booking indicators. The machine learning results are presented in `reports/report.html`.
-
-- ADR is a price per night, so estimated booking value is an approximation, and the dataset does not state a currency.
-- Nights booked is only a proxy for demand. The dataset has no room inventory, so a true occupancy rate cannot be calculated.
-- The dataset covers only two hotels and a limited period.
-
 ## Tech stack
 
 Python, pandas, scikit-learn, Plotly and Dash, Git and GitHub, GitHub Actions, VS Code.
